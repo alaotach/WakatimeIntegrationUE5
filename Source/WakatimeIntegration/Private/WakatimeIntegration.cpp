@@ -80,49 +80,49 @@ void FWakatimeIntegrationModule::OnAssetAdded(const FAssetData& AssetData)
 {
 	int64 now = GetCurrentTime();
 	if ((now - LastAssetPushTime) < SaveDebounce) {
-		UE_LOG(LogTemp, Warning, TEXT("Waka: Skipping Add Event"));
+		//UE_LOG(LogTemp, Warning, TEXT("Waka: Skipping Add Event"));
 		return;
 	}
 	LastAssetPushTime = now;
 
 	Dirty = true;
 	AddOperations++;
-	UE_LOG(LogTemp, Warning, TEXT("Waka: Asset Added"));
+	//UE_LOG(LogTemp, Warning, TEXT("Waka: Asset Added"));
 }
 
 void FWakatimeIntegrationModule::OnAssetRemoved(const FAssetData& AssetData)
 {
 	int64 now = GetCurrentTime();
 	if ((now - LastAssetPushTime) < SaveDebounce) {
-		UE_LOG(LogTemp, Warning, TEXT("Waka: Skipping Remove Event"));
+		//UE_LOG(LogTemp, Warning, TEXT("Waka: Skipping Remove Event"));
 		return;
 	}
 	LastAssetPushTime = now;
 
 	Dirty = true;
 	DeleteOperations++;
-	UE_LOG(LogTemp, Warning, TEXT("Waka: Asset Removed"));
+	//UE_LOG(LogTemp, Warning, TEXT("Waka: Asset Removed"));
 }
 
 void FWakatimeIntegrationModule::OnAssetRenamed(const FAssetData& AssetData, const FString& OldPath)
 {
 	int64 now = GetCurrentTime();
 	if ((now - LastAssetPushTime) < SaveDebounce) {
-		UE_LOG(LogTemp, Warning, TEXT("Waka: Skipping Remove Event"));
+		//UE_LOG(LogTemp, Warning, TEXT("Waka: Skipping Remove Event"));
 		return;
 	}
 	LastAssetPushTime = now;
 
 	Dirty = true;
 	RenameOperations++;
-	UE_LOG(LogTemp, Warning, TEXT("Waka: Asset Renamed"));
+	//UE_LOG(LogTemp, Warning, TEXT("Waka: Asset Renamed"));
 }
 
 void FWakatimeIntegrationModule::OnObjectSaved(UObject* SavedObject)
 {
 	int64 now = GetCurrentTime();
 	if ((now - LastAssetPushTime) < SaveDebounce) {
-		UE_LOG(LogTemp, Warning, TEXT("Waka: Skipping Save Event"));
+		//UE_LOG(LogTemp, Warning, TEXT("Waka: Skipping Save Event"));
 		return;
 	}
 	LastAssetPushTime = now;
@@ -130,7 +130,7 @@ void FWakatimeIntegrationModule::OnObjectSaved(UObject* SavedObject)
 	SaveOperations++;
 	Dirty = true;
 	LastSavedName = SavedObject->GetFName();
-	UE_LOG(LogTemp, Warning, TEXT("Waka: Object Saved"));
+	//UE_LOG(LogTemp, Warning, TEXT("Waka: Object Saved"));
 }
 
 FString GetCurrentOSName()
@@ -161,7 +161,6 @@ bool FWakatimeIntegrationModule::OnTimerTick(float DeltaTime)
 
 void FWakatimeIntegrationModule::SendHeartbeat()
 {
-	UE_LOG(LogTemp, Warning, TEXT("waka sanity check"));
 	FName localLastSavedName = TEXT("None");
 	int32 localDeleteOperations = 0;
 	int32 localSaveOperations = 0;
@@ -186,13 +185,11 @@ void FWakatimeIntegrationModule::SendHeartbeat()
 		AddOperations = 0;
 		Dirty = false;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("waka copy success"));
 	if (!localDirty) {
 		return;
 	}
 	const UWakatimeSettings* Settings = GetDefault<UWakatimeSettings>();
 	if (!Settings) {
-		UE_LOG(LogTemp, Error, TEXT("Waka: Settings are invalid, cannot send heartbeat."));
 		return;
 	}
 
@@ -207,23 +204,12 @@ void FWakatimeIntegrationModule::SendHeartbeat()
 	{
 		EntityName = localLastSavedName.ToString();
 	}
-	UE_LOG(LogTemp, Warning, TEXT("waka s time"));
 	int64 localTime = GetCurrentTime();
-
-	UE_LOG(LogTemp, Warning, TEXT("waka s enginever"));
 	FString EngineVersionString = FEngineVersion::Current().ToString(EVersionComponent::Patch);
-
-	UE_LOG(LogTemp, Warning, TEXT("waka s projname"));
 	FString ProjectName = FApp::GetProjectName();
-
-	UE_LOG(LogTemp, Warning, TEXT("waka s compname"));
 	FString ComputerName = FPlatformProcess::ComputerName();
-
-	UE_LOG(LogTemp, Warning, TEXT("waka s osname"));
 	FString OSName = GetCurrentOSName();
 
-
-	UE_LOG(LogTemp, Warning, TEXT("waka formatting part"));
 	FString TargetURL = Endpoint + TEXT("/users/current/heartbeats");
 	FString Body = FString::Printf(
 		TEXT( //language as UnrealEngine because you could be making shaders, doing blueprints, c++, really anything
@@ -234,8 +220,6 @@ void FWakatimeIntegrationModule::SendHeartbeat()
 		),
 		localTime, *ProjectName, *EntityName, *EngineVersionString,
 		*ComputerName, localAddOperations, localDeleteOperations, *OSName);
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *Body);
-	UE_LOG(LogTemp, Warning, TEXT("waka formatting part done"));
 
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = FHttpModule::Get().CreateRequest();
 	Request->SetURL(TargetURL);
@@ -245,7 +229,6 @@ void FWakatimeIntegrationModule::SendHeartbeat()
 
 	FString RawBearerToken = Settings->WakatimeBearerToken.TrimStartAndEnd();
 	FString AuthToken = FString::Printf(TEXT("Bearer %s"), *RawBearerToken);
-	UE_LOG(LogTemp, Warning, TEXT("waka auth: %s"), *AuthToken);
 	Request->SetHeader(TEXT("Authorization"), AuthToken);
 
 	Request->SetContentAsString(Body);
@@ -253,8 +236,6 @@ void FWakatimeIntegrationModule::SendHeartbeat()
 	Request->OnProcessRequestComplete().BindRaw(this, &FWakatimeIntegrationModule::OnHttpResponse);
 
 	Request->ProcessRequest();
-
-	UE_LOG(LogTemp, Warning, TEXT("Waka: Sent Heatbeat"));
 }
 
 int64 FWakatimeIntegrationModule::GetCurrentTime()
@@ -275,7 +256,7 @@ void FWakatimeIntegrationModule::OnHttpResponse(FHttpRequestPtr Request, FHttpRe
 {
 	if (!bWasSuccessful || !Response.IsValid())
 	{
-		UE_LOG(LogTemp, Error, TEXT("waka: heartbeat failed to connect or received no response"));
+		UE_LOG(LogTemp, Error, TEXT("Wakatime Integration: Failed to establish connection to Wakatime endpoint."));
 		return;
 	}
 
@@ -283,15 +264,15 @@ void FWakatimeIntegrationModule::OnHttpResponse(FHttpRequestPtr Request, FHttpRe
 	FString ResponseString = Response->GetContentAsString();
 
 	if (ResponseCode >= 200 && ResponseCode < 300) {
-		UE_LOG(LogTemp, Log, TEXT("waka: heartbeat successful. code: %d"), ResponseCode);
+		//UE_LOG(LogTemp, Log, TEXT("Wakatime Integration: Packet accepted with code %d"), ResponseCode);
 	}
 	else if (ResponseCode == 401)
 	{
-		UE_LOG(LogTemp, Error, TEXT("waka: heartbeat failed due to invalid api token (401). response: %s"), *ResponseString);
+		UE_LOG(LogTemp, Error, TEXT("Wakatime Integration: Heartbeat failed due to invalid API token (401). response: %s"), *ResponseString);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("waka: heartbeat failed. code: %d. response: %s"), ResponseCode, *ResponseString);
+		UE_LOG(LogTemp, Error, TEXT("Wakatime Integration: Heartbeat failed. Code: %d. Response: %s"), ResponseCode, *ResponseString);
 	}
 }
 
