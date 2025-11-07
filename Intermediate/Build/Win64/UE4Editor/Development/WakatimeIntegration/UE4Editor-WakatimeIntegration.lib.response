@@ -6,7 +6,7 @@
 /NAME:"UE4Editor-WakatimeIntegration.dll"
 /IGNORE:4221
 /NODEFAULTLIB
-"C:\Users\rober\OneDrive\Documents\Unreal Projects\UE4_Wakatime\Intermediate\Build\Win64\UE4_WakatimeEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.obj"
+"C:\Users\rober\OneDrive\Documents\Unreal Projects\UE4_Wakatime\Intermediate\Build\Win64\UE4_WakatimeEditor\Development\UnrealEd\SharedPCH.UnrealEd.ShadowErrors.h.obj"
 "C:\Users\rober\OneDrive\Documents\Unreal Projects\UE4_Wakatime\Plugins\WakatimeIntegration\Intermediate\Build\Win64\UE4Editor\Development\WakatimeIntegration\WakatimeIntegration.cpp.obj"
 "C:\Users\rober\OneDrive\Documents\Unreal Projects\UE4_Wakatime\Plugins\WakatimeIntegration\Intermediate\Build\Win64\UE4Editor\Development\WakatimeIntegration\Default.rc2.res"
 /OUT:"C:\Users\rober\OneDrive\Documents\Unreal Projects\UE4_Wakatime\Plugins\WakatimeIntegration\Intermediate\Build\Win64\UE4Editor\Development\WakatimeIntegration\UE4Editor-WakatimeIntegration.lib"

@@ -1,3 +1,11 @@
 .vs/
 Plugins/WakatimeIntegration/.vs/
 .vsix
+Build/
+Intermediate/
+Plugins/WakatimeIntegration/Build/
+Plugins/WakatimeIntegration/Intermediate/
+.exp
+.lib
+Binaries/
+Plugins/WakatimeIntegration/Binaries/
