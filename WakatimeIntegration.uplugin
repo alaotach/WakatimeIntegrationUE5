@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "WakatimeIntegration",
+	"Description": "Wakatime Integration for Unreal Engine 4",
+	"Category": "Other",
+	"CreatedBy": "ZXMushroom63",
+	"CreatedByURL": "https://github.com/ZXMushroom63",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "WakatimeIntegration",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
+		}
+	]
+}

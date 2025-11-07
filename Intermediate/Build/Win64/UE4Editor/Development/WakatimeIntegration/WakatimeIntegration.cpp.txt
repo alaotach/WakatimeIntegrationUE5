@@ -1,0 +1,2 @@
+C:\Users\rober\OneDrive\Documents\Unreal Projects\UE4_Wakatime\Plugins\WakatimeIntegration\Intermediate\Build\Win64\UE4Editor\Development\WakatimeIntegration\Definitions.WakatimeIntegration.h
+C:\Users\rober\OneDrive\Documents\Unreal Projects\UE4_Wakatime\Plugins\WakatimeIntegration\Source\WakatimeIntegration\Public\WakatimeIntegration.h
