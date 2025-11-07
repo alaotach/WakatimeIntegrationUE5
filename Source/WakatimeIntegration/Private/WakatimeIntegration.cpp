@@ -154,7 +154,7 @@ FString GetCurrentOSName()
 
 bool FWakatimeIntegrationModule::OnTimerTick(float DeltaTime)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Waka: Timer Event"));
+	//UE_LOG(LogTemp, Warning, TEXT("Waka: Timer Event"));
 	SendHeartbeat();
 	return true;
 }
