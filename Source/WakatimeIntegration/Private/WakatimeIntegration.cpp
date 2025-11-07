@@ -179,6 +179,12 @@ void FWakatimeIntegrationModule::SendHeartbeat()
 		localRenameOperations = RenameOperations;
 		localAddOperations = AddOperations;
 		localLastSavedName = LastSavedName;
+
+		DeleteOperations = 0;
+		SaveOperations = 0;
+		RenameOperations = 0;
+		AddOperations = 0;
+		Dirty = false;
 	}
 	UE_LOG(LogTemp, Warning, TEXT("waka copy success"));
 	if (!localDirty) {
@@ -237,10 +243,14 @@ void FWakatimeIntegrationModule::SendHeartbeat()
 	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
 	Request->SetHeader(TEXT("User-Agent"), TEXT("UnrealEngine4"));
 
-	FString AuthToken = FString::Printf(TEXT("Bearer %s"), *Settings->WakatimeBearerToken);
+	FString RawBearerToken = Settings->WakatimeBearerToken.TrimStartAndEnd();
+	FString AuthToken = FString::Printf(TEXT("Bearer %s"), *RawBearerToken);
+	UE_LOG(LogTemp, Warning, TEXT("waka auth: %s"), *AuthToken);
 	Request->SetHeader(TEXT("Authorization"), AuthToken);
 
 	Request->SetContentAsString(Body);
+
+	Request->OnProcessRequestComplete().BindRaw(this, &FWakatimeIntegrationModule::OnHttpResponse);
 
 	Request->ProcessRequest();
 
@@ -259,6 +269,30 @@ int64 FWakatimeIntegrationModule::GetCurrentTime()
 	int64_t seconds_since_epoch = seconds_duration.count();
 
 	return seconds_since_epoch; //why is it so complicated to get a timestamp bruh
+}
+
+void FWakatimeIntegrationModule::OnHttpResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	if (!bWasSuccessful || !Response.IsValid())
+	{
+		UE_LOG(LogTemp, Error, TEXT("waka: heartbeat failed to connect or received no response"));
+		return;
+	}
+
+	int32 ResponseCode = Response->GetResponseCode();
+	FString ResponseString = Response->GetContentAsString();
+
+	if (ResponseCode >= 200 && ResponseCode < 300) {
+		UE_LOG(LogTemp, Log, TEXT("waka: heartbeat successful. code: %d"), ResponseCode);
+	}
+	else if (ResponseCode == 401)
+	{
+		UE_LOG(LogTemp, Error, TEXT("waka: heartbeat failed due to invalid api token (401). response: %s"), *ResponseString);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("waka: heartbeat failed. code: %d. response: %s"), ResponseCode, *ResponseString);
+	}
 }
 
 #undef LOCTEXT_NAMESPACE

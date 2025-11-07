@@ -6,11 +6,14 @@
 #include "Modules/ModuleManager.h"
 #include "HAL/CriticalSection.h"
 #include "Containers/Ticker.h"
+#include "Interfaces/IHttpRequest.h"
+#include "Interfaces/IHttpResponse.h"
 
 struct FAssetData;
 class UBlueprint;
 class UObject;
 class UWakatimeSettings;
+
 
 class FWakatimeIntegrationModule : public IModuleInterface
 {
@@ -27,7 +30,7 @@ private:
 	void OnObjectSaved(UObject* SavedObject);
 	void SendHeartbeat();
 	int64 GetCurrentTime();
-	//void OnHttpResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnHttpResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
 	FCriticalSection DataLock;
 
