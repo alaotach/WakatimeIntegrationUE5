@@ -68,6 +68,9 @@ void FWakatimeIntegrationModule::ShutdownModule()
 		}
 	}
 
+
+	
+
 	//FKismetEditorUtilities::OnBlueprintCompiled.RemoveAll(this);
 	FCoreUObjectDelegates::OnObjectSaved.RemoveAll(this);
 

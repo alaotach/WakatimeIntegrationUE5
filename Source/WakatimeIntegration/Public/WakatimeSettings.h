@@ -4,7 +4,7 @@
 #include "Engine/DeveloperSettings.h"
 #include "WakatimeSettings.generated.h"
 
-UCLASS(Config=EditorPerProjectUserSettings, DefaultConfig)
+UCLASS(Config="wakatime", GlobalUserConfig)
 class UWakatimeSettings : public UDeveloperSettings
 {
 	GENERATED_BODY()
