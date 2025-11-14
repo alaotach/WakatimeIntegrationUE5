@@ -20,3 +20,7 @@ Installation
   - `C:\Program Files\Epic Games\UE_[Version]\Engine\Plugins\` for Windows users
 - Enable the plugin in the plugins menu. You may need to do this for each project you wish to track.
 - In editor settings, look for `Wakatime Integration`, and set your token and endpoint, as well as heartbeat interval. These settings are saved globally.
+
+Building from source:
+-
+[instructions here](https://hackatime.hackclub.com/docs/editors/unreal-engine-4)
