@@ -1,4 +1,11 @@
 # Wakatime Integration for UE5
+
+[![Unreal Engine 5](https://img.shields.io/badge/Unreal%20Engine-5.7-blue)](https://www.unrealengine.com/)
+[![License](https://img.shields.io/github/license/alaotach/WakatimeIntegrationUE5)](LICENSE)
+[![GitHub release](https://img.shields.io/github/v/release/alaotach/WakatimeIntegrationUE5)](https://github.com/alaotach/WakatimeIntegrationUE5/releases)
+
+> **Keywords**: Unreal Engine 5 Plugin, UE5 Wakatime, Wakatime Integration, Time Tracking Plugin, Unreal Engine Time Tracker, UE5 Editor Plugin, Game Development Analytics, Blueprint Tracking, Asset Tracking, Developer Productivity
+
 Simple Unreal Engine 5 plugin for sending Wakatime heartbeats to an endpoint of choice. Currently only Windows builds, but should work on MacOS if you self-compile on a macbook.
 
 ## Credits
