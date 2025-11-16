@@ -5,7 +5,8 @@
 
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "Kismet2/KismetEditorUtilities.h"
-#include "CoreUObject/Public/UObject/UObjectGlobals.h"
+#include "UObject/UObjectGlobals.h"
+#include "UObject/Package.h"
 #include "HttpModule.h"
 #include "Interfaces/IHttpRequest.h"
 #include "Json.h"
@@ -43,9 +44,9 @@ void FWakatimeIntegrationModule::StartupModule()
 	AssetRegistry.OnAssetAdded().AddRaw(this, &FWakatimeIntegrationModule::OnAssetAdded);
 	AssetRegistry.OnAssetRemoved().AddRaw(this, &FWakatimeIntegrationModule::OnAssetRemoved);
 	AssetRegistry.OnAssetRenamed().AddRaw(this, &FWakatimeIntegrationModule::OnAssetRenamed);
-	FCoreUObjectDelegates::OnObjectSaved.AddRaw(this, &FWakatimeIntegrationModule::OnObjectSaved);
+	UPackage::PackageSavedWithContextEvent.AddRaw(this, &FWakatimeIntegrationModule::OnPackageSaved);
 
-	TimerHandle = FTicker::GetCoreTicker().AddTicker(
+	TimerHandle = FTSTicker::GetCoreTicker().AddTicker(
 		FTickerDelegate::CreateRaw(this, &FWakatimeIntegrationModule::OnTimerTick),
 		TimerDuration
 	);
@@ -72,9 +73,9 @@ void FWakatimeIntegrationModule::ShutdownModule()
 	
 
 	//FKismetEditorUtilities::OnBlueprintCompiled.RemoveAll(this);
-	FCoreUObjectDelegates::OnObjectSaved.RemoveAll(this);
+	UPackage::PackageSavedWithContextEvent.RemoveAll(this);
 
-	FTicker::GetCoreTicker().RemoveTicker(TimerHandle);
+	FTSTicker::GetCoreTicker().RemoveTicker(TimerHandle);
 
 	//UE_LOG(LogTemp, Warning, TEXT("Wakatime Integration Shutdown"));
 }
@@ -121,7 +122,7 @@ void FWakatimeIntegrationModule::OnAssetRenamed(const FAssetData& AssetData, con
 	//UE_LOG(LogTemp, Warning, TEXT("Waka: Asset Renamed"));
 }
 
-void FWakatimeIntegrationModule::OnObjectSaved(UObject* SavedObject)
+void FWakatimeIntegrationModule::OnPackageSaved(const FString& PackageFileName, UPackage* Package, FObjectPostSaveContext ObjectSaveContext)
 {
 	int64 now = GetCurrentTime();
 	if ((now - LastAssetPushTime) < SaveDebounce) {
@@ -132,8 +133,11 @@ void FWakatimeIntegrationModule::OnObjectSaved(UObject* SavedObject)
 
 	SaveOperations++;
 	Dirty = true;
-	LastSavedName = SavedObject->GetFName();
-	//UE_LOG(LogTemp, Warning, TEXT("Waka: Object Saved"));
+	if (Package)
+	{
+		LastSavedName = Package->GetFName();
+	}
+	//UE_LOG(LogTemp, Warning, TEXT("Waka: Package Saved"));
 }
 
 FString GetCurrentOSName()

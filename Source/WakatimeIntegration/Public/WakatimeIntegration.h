@@ -8,10 +8,12 @@
 #include "Containers/Ticker.h"
 #include "Interfaces/IHttpRequest.h"
 #include "Interfaces/IHttpResponse.h"
+#include "UObject/ObjectSaveContext.h"
 
 struct FAssetData;
 class UBlueprint;
 class UObject;
+class UPackage;
 class UWakatimeSettings;
 
 
@@ -27,7 +29,7 @@ private:
 	void OnAssetAdded(const FAssetData& AssetData);
 	void OnAssetRemoved(const FAssetData& AssetData);
 	void OnAssetRenamed(const FAssetData& AssetData, const FString& OldPath);
-	void OnObjectSaved(UObject* SavedObject);
+	void OnPackageSaved(const FString& PackageFileName, UPackage* Package, FObjectPostSaveContext ObjectSaveContext);
 	void SendHeartbeat();
 	int64 GetCurrentTime();
 	void OnHttpResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
@@ -43,5 +45,5 @@ private:
 	int64 SaveDebounce = 2;
 	FName LastSavedName = FName(TEXT("None"));
 
-	FDelegateHandle TimerHandle;
+	FTSTicker::FDelegateHandle TimerHandle;
 };
