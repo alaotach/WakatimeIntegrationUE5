@@ -27,4 +27,4 @@ Installation
 
 Building from source:
 -
-For building instructions, refer to the [original UE4 documentation](https://hackatime.hackclub.com/docs/editors/unreal-engine-4) (process is similar for UE5).
+[instructions here](https://hackatime.hackclub.com/docs/editors/unreal-engine-4)
