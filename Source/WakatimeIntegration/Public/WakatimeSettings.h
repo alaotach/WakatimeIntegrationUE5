@@ -15,7 +15,7 @@ public:
 	UPROPERTY(Config, EditAnywhere, Category="Wakatime Integration", meta = (DisplayName = "Wakatime Token: "))
 	FString WakatimeBearerToken;
 
-	UPROPERTY(Config, EditAnywhere, Category = "Wakatime Integration", meta = (DisplayName = "Heartbeat Interval (s): ", ClampMin = "10", ClampMax = "240"))
+	UPROPERTY(Config, EditAnywhere, Category = "Wakatime Integration", meta = (DisplayName = "Heartbeat Interval (s): ", ClampMin = "10", ClampMax = "120"))
 	int32 WakatimeInterval;
 
 	UPROPERTY(Config, EditAnywhere, Category = "Wakatime Integration", meta = (DisplayName = "API Endpoint URL", Tooltip = "Something like this, no trailing slash: https://wakahost.example.com/api/waka/v1"))
