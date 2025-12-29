@@ -82,13 +82,6 @@ void FWakatimeIntegrationModule::ShutdownModule()
 
 void FWakatimeIntegrationModule::OnAssetAdded(const FAssetData& AssetData)
 {
-	int64 now = GetCurrentTime();
-	if ((now - LastAssetPushTime) < SaveDebounce) {
-		//UE_LOG(LogTemp, Warning, TEXT("Waka: Skipping Add Event"));
-		return;
-	}
-	LastAssetPushTime = now;
-
 	Dirty = true;
 	AddOperations++;
 	//UE_LOG(LogTemp, Warning, TEXT("Waka: Asset Added"));
@@ -96,13 +89,6 @@ void FWakatimeIntegrationModule::OnAssetAdded(const FAssetData& AssetData)
 
 void FWakatimeIntegrationModule::OnAssetRemoved(const FAssetData& AssetData)
 {
-	int64 now = GetCurrentTime();
-	if ((now - LastAssetPushTime) < SaveDebounce) {
-		//UE_LOG(LogTemp, Warning, TEXT("Waka: Skipping Remove Event"));
-		return;
-	}
-	LastAssetPushTime = now;
-
 	Dirty = true;
 	DeleteOperations++;
 	//UE_LOG(LogTemp, Warning, TEXT("Waka: Asset Removed"));
@@ -110,13 +96,6 @@ void FWakatimeIntegrationModule::OnAssetRemoved(const FAssetData& AssetData)
 
 void FWakatimeIntegrationModule::OnAssetRenamed(const FAssetData& AssetData, const FString& OldPath)
 {
-	int64 now = GetCurrentTime();
-	if ((now - LastAssetPushTime) < SaveDebounce) {
-		//UE_LOG(LogTemp, Warning, TEXT("Waka: Skipping Remove Event"));
-		return;
-	}
-	LastAssetPushTime = now;
-
 	Dirty = true;
 	RenameOperations++;
 	//UE_LOG(LogTemp, Warning, TEXT("Waka: Asset Renamed"));
@@ -124,13 +103,6 @@ void FWakatimeIntegrationModule::OnAssetRenamed(const FAssetData& AssetData, con
 
 void FWakatimeIntegrationModule::OnPackageSaved(const FString& PackageFileName, UPackage* Package, FObjectPostSaveContext ObjectSaveContext)
 {
-	int64 now = GetCurrentTime();
-	if ((now - LastAssetPushTime) < SaveDebounce) {
-		//UE_LOG(LogTemp, Warning, TEXT("Waka: Skipping Save Event"));
-		return;
-	}
-	LastAssetPushTime = now;
-
 	SaveOperations++;
 	Dirty = true;
 	if (Package)
@@ -162,6 +134,8 @@ FString GetCurrentOSName()
 bool FWakatimeIntegrationModule::OnTimerTick(float DeltaTime)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Waka: Timer Event"));
+	// Always mark as dirty to track active editor time, not just file saves
+	Dirty = true;
 	SendHeartbeat();
 	return true;
 }
